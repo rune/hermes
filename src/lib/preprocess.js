@@ -1,6 +1,8 @@
-// Apply predetermined processors to process any matching phrases
+// Make copy of original files then apply predetermined processors to process any matching
+// phrases.
 
 const fs = require("fs")
+const copyFiles = require("./copyFiles")
 
 const processorList = {
   lowercase: str => {
@@ -10,6 +12,10 @@ const processorList = {
 
 const preprocess = async (filePaths, processables) => {
   console.log("\nStarting preprocessing...")
+
+  // Copy files so we can replicate original strings back in the post-processing step.
+  copyFiles(filePaths)
+
   for (const filePath of filePaths) {
     let data = fs.readFileSync(filePath).toString()
 

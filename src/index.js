@@ -7,14 +7,10 @@ const updateSourceFiles = require("./lib/updateSourceFiles")
 const machineTrFiles = require("./lib/machineTrFiles")
 const repeatTaskInParallel = require("./lib/repeatTaskInParallel")
 const downloadFile = require("./lib/downloadFile")
-const copyFiles = require("./lib/copyFiles")
 const preprocess = require("./lib/preprocess")
 const postprocess = require("./lib/postprocess")
 
-const trSync = async ({ filePaths, crowdinInfo, languageData, processables }) => {
-  // Copy files so we can replicate original strings back in the post-processing step.
-  copyFiles(filePaths)
-
+const trSync = async ({ filePaths, crowdinInfo, languageData, processables = null }) => {
   if (processables) {
     // Process any strings to be translated if necessary
     await preprocess(filePaths, processables)
@@ -54,9 +50,11 @@ const trSync = async ({ filePaths, crowdinInfo, languageData, processables }) =>
     processorFn: downloadFile
   })
 
-  // Go through all language files and replace original string as `msgid` and remove the
-  // copy files.
-  postprocess(filePaths, languageData)
+  if (processables) {
+    // Go through all language files and replace original string as `msgid` and remove the
+    // copy files.
+    await postprocess(filePaths, languageData)
+  }
 }
 
 module.exports = trSync

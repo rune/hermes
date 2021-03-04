@@ -16,13 +16,25 @@ const trSync = require("@runeai/hermes")
     "crowdinInfo": {
       "projectName": "superawesomeproject",
       "apiKey": "xxxxxxxxx"
-    }
+    },
+    "processables": [
+      { "phrase": "Friend Boost", "processor": "lowercase" },
+      { "phrase": "Quick Match", "processor": "lowercase" }
+    ]
   })
 })()
 ```
 
 #### How it works
 
-1. The function will first update the source file in Crowdin, so any strings added/modified will be there ready to be translated.
-2. Next, it'll machine translate the files using Google translate into the specified locales in the `languageData` payload when invoked.
-3. When translations are done, the function will download all files into their respective locale folder, based on the language's ISO 639-1 code.
+1. The function will first create a copy of the provided file paths. This is the source of truth to help ensure integrity of original strings after the processing step.
+2. If `processables` are provided, the function will match the `phrase` in any locale files and process it by one of the predetermined processors (see list below).
+3. Update the source file in Crowdin, so any strings added/modified will be there ready to be translated.
+4. Next, it'll machine translate the files using Google translate into the specified locales in the `languageData` payload when invoked.
+5. When translations are done, the function will download all files into their respective locale folder, based on the language's ISO 639-1 code.
+6. Finally, it'll replace all message strings to the original and clean up any of the copies made in the first step.
+
+#### Existing list of processors
+
+`lowercase` - lowercases the entire string
+...more to come!

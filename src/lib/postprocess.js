@@ -4,7 +4,7 @@
 const fs = require("fs")
 const lineReplace = require("./lineReplace")
 
-const postprocess = (filePaths, languageData) => {
+const postprocess = async (filePaths, languageData) => {
   console.log("\nStarting postprocessing...")
   const languageCodes = Object.values(languageData)
   for (const enFilePath of filePaths) {
@@ -84,12 +84,7 @@ const postprocess = (filePaths, languageData) => {
     }
 
     // Remove the original file since it's no longer needed
-    fs.unlink(originalFilePath, err => {
-      if (err) {
-        console.error(err)
-        return
-      }
-    })
+    fs.unlinkSync(originalFilePath)
   }
 
   console.log("Finished postprocessing.\n")

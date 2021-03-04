@@ -1,6 +1,6 @@
 {
   "name": "@runeai/hermes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Hermes provides utility functions that help automate the machine translation workflow. It doesn't perform any extraction for strings to be translated, handle resolving human & machine translations, nor logic for when files should be committed.",
   "main": "src/index.js",
   "scripts": {

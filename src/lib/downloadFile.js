@@ -17,9 +17,7 @@ const downloadFile = async ({ filePath, languageCode, crowdinInfo }) => {
 
   // if locale directory doesn't exist, create it
   if (!existsSync(pathToDir)) {
-    mkdirSync(pathToDir, { recursive: true }, err => {
-      if (err) throw err
-    })
+    mkdirSync(pathToDir, { recursive: true })
     console.log(`Created ${pathToDir}`)
   }
 

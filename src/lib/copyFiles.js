@@ -1,7 +1,7 @@
 // Makes a duplicate copy of given file paths in the same folder, appending _original to
 // the filename.
 
-const fs = require("fs")
+const { copyFileSync } = require("fs")
 
 const copyFiles = filePaths => {
   for (const filePath of filePaths) {
@@ -11,9 +11,7 @@ const copyFiles = filePaths => {
       extensionPeriodIndex
     )}_original${filePath.substring(extensionPeriodIndex)}`
 
-    fs.copyFile(filePath, newFilePath, err => {
-      if (err) throw err
-    })
+    copyFileSync(filePath, newFilePath)
   }
 }
 

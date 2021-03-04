@@ -1,7 +1,7 @@
 // Go through all language files and replace original string as `msgid` and remove the
 // copy files.
 
-const fs = require("fs")
+const { readFileSync, unlinkSync } = require("fs")
 const lineReplace = require("./lineReplace")
 
 const postprocess = async (filePaths, languageData) => {
@@ -27,8 +27,7 @@ const postprocess = async (filePaths, languageData) => {
       )
 
     // Init array of lines in the original file
-    const enFileLines = fs
-      .readFileSync(originalFilePath)
+    const enFileLines = readFileSync(originalFilePath)
       .toString()
       .split("\n")
 
@@ -54,8 +53,7 @@ const postprocess = async (filePaths, languageData) => {
       } else {
         // Crowdin can sometimes add additional metadata lines to MT files so we'll need
         // the proper index diff offset to replace all lines with `msgid`
-        const localeFileLines = fs
-          .readFileSync(localeFilePath)
+        const localeFileLines = readFileSync(localeFilePath)
           .toString()
           .split("\n")
 
@@ -84,7 +82,7 @@ const postprocess = async (filePaths, languageData) => {
     }
 
     // Remove the original file since it's no longer needed
-    fs.unlinkSync(originalFilePath)
+    unlinkSync(originalFilePath)
   }
 
   console.log("Finished postprocessing.\n")

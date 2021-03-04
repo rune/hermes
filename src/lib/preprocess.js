@@ -1,7 +1,7 @@
 // Make copy of original files then apply predetermined processors to process any matching
 // phrases.
 
-const fs = require("fs")
+const { readFileSync, writeFileSync } = require("fs")
 const copyFiles = require("./copyFiles")
 
 const processorList = {
@@ -17,7 +17,7 @@ const preprocess = async (filePaths, processables) => {
   copyFiles(filePaths)
 
   for (const filePath of filePaths) {
-    let data = fs.readFileSync(filePath).toString()
+    let data = readFileSync(filePath).toString()
 
     processables.forEach(({ phrase, processor }) => {
       if (!phrase) throw "Missing phrase!"
@@ -28,7 +28,7 @@ const preprocess = async (filePaths, processables) => {
       data = data.replace(new RegExp(phrase, "g"), processorFn(phrase))
     })
 
-    fs.writeFileSync(filePath, data)
+    writeFileSync(filePath, data)
   }
   console.log("Finished preprocessing.\n")
 }

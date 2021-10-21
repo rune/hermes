@@ -11,6 +11,9 @@ const preprocess = require("./lib/preprocess")
 const postprocess = require("./lib/postprocess")
 
 const trSync = async ({ filePaths, crowdinInfo, languageData, processables = null }) => {
+  // Prevent running script for English
+  delete languageData["3"]
+
   if (processables) {
     // Process any strings to be translated if necessary
     await preprocess(filePaths, processables)

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/rune/hermes#readme",
   "dependencies": {
+    "@crowdin/crowdin-api-client": "^1.28.0",
     "form-data": "^3.0.0",
     "node-fetch": "^2.6.0"
   },

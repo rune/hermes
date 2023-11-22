@@ -11,7 +11,7 @@ function getFileId(token, projectId, name) {
       new SourceFiles({ token })
         .withFetchAll()
         .listProjectFiles(projectId)
-        .then(resp => resp.data.find(file => file.data.name === name))
+        .then(resp => resp.data.find(file => file.data.path === `/${name}`))
         .then(file => {
           if (!file) throw new Error("File not found")
           return file.data.id

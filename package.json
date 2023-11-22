@@ -1,6 +1,6 @@
 {
   "name": "@runeai/hermes",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Hermes provides utility functions that help automate the machine translation workflow. It doesn't perform any extraction for strings to be translated, handle resolving human & machine translations, nor logic for when files should be committed.",
   "main": "src/index.js",
   "scripts": {
@@ -17,8 +17,7 @@
   },
   "homepage": "https://github.com/rune/hermes#readme",
   "dependencies": {
-    "form-data": "^3.0.0",
-    "node-fetch": "^2.6.0"
+    "@crowdin/crowdin-api-client": "^1.28.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

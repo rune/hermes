@@ -11,7 +11,11 @@ function getEngineId(token, name) {
       new MachineTranslation({ token })
         .withFetchAll()
         .listMts()
-        .then(resp => resp.data.find(engine => engine.data.name === name).data.id)
+        .then(resp => resp.data.find(engine => engine.data.name === name))
+        .then(engine => {
+          if (!engine) throw new Error("Engine not found")
+          return engine.data.id
+        })
     )
   }
 

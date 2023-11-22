@@ -11,10 +11,11 @@ function getProjectId(token, identifier) {
       new ProjectsGroups({ token })
         .withFetchAll()
         .listProjects()
-        .then(
-          resp =>
-            resp.data.find(project => project.data.identifier === identifier).data.id
-        )
+        .then(resp => resp.data.find(project => project.data.identifier === identifier))
+        .then(project => {
+          if (!project) throw new Error("Project not found")
+          return project.data.id
+        })
     )
   }
 

@@ -3,44 +3,57 @@
 // Note: If requested languages are not specified in Crowdin project, response will still
 // succeed with status of skipped.
 
-const FormData = require("form-data")
-const fetch = require("node-fetch")
 const getFileName = require("./getFileName")
+const { getProjectId } = require("./crowdin/getProjectId")
+const { getFileId } = require("./crowdin/getFileId")
+const { getEngineId } = require("./crowdin/getEngineId")
+const { applyPreTranslation } = require("./crowdin/applyPreTranslation")
+const { getPreTranslationStatus } = require("./crowdin/getPreTranslationStatus")
+const { sleep } = require("./sleep")
 
 const machineTrFiles = async ({ filePaths, languageData, crowdinInfo }) => {
   console.log(`Machine translating ${JSON.stringify(filePaths)}...`)
-  //set up request options
-  const form = new FormData()
-  form.append("method", "mt")
-  form.append("apply_untranslated_strings_only", "true")
-  form.append("engine", "google")
-  for (const filePath of filePaths) {
-    const fileName = getFileName(filePath)
-    form.append("files[]", fileName)
-  }
-  for (const languageId in languageData) {
-    form.append("languages[]", languageData[languageId].crowdinLocaleCode)
-  }
 
-  // initiate request
-  const response = await fetch(
-    `https://api.crowdin.com/api/project/${crowdinInfo.projectName}/pre-translate?key=${crowdinInfo.apiKey}`,
-    {
-      method: "POST",
-      body: form
-    }
+  const projectId = await getProjectId(crowdinInfo.apiV2Key, crowdinInfo.projectName)
+  const languageIds = Object.values(languageData).map(
+    ({ crowdinLocaleCode }) => crowdinLocaleCode
   )
-  const formattedResponse = await response.text()
+  const fileIds = await Promise.all(
+    filePaths.map(filePath =>
+      getFileId(crowdinInfo.apiV2Key, projectId, getFileName(filePath))
+    )
+  )
+  const engineId = await getEngineId(crowdinInfo.apiV2Key, "google")
 
-  return new Promise((resolve, reject) => {
-    if (response.ok) {
-      console.log(`Successfully completed machine translating files!\n`)
-      resolve(formattedResponse)
+  const preTranslationId = await applyPreTranslation(
+    crowdinInfo.apiV2Key,
+    projectId,
+    languageIds,
+    fileIds,
+    engineId
+  )
+
+  const checkEveryMs = 1000
+  const maxWaitMs = 120000 // 2 minutes
+
+  for (let i = 0; i < maxWaitMs / checkEveryMs; i++) {
+    await sleep(checkEveryMs)
+
+    const { status, progress } = await getPreTranslationStatus(
+      crowdinInfo.apiV2Key,
+      projectId,
+      preTranslationId
+    )
+
+    if (status === "finished") {
+      console.log("Finished")
+      return
     } else {
-      console.log(`Error machine translating files!\n`)
-      reject(formattedResponse)
+      console.log(`Progress: ${status} ${progress}`)
     }
-  })
+  }
+
+  throw new Error("Pre-translations timed out")
 }
 
 module.exports = machineTrFiles

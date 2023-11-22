@@ -46,7 +46,6 @@ const trSync = async ({ filePaths, crowdinInfo, languageData, processables = nul
     }, [])
 
   // Download each file to their respective file paths. Note: Crowdin can only accept 20 concurrent requests.
-  // However, since we are using deprecated API v1, the limit is decreased.
   await repeatTaskInParallel({
     concurrentLimit: 20,
     taskArgs: downloadFileArgs,

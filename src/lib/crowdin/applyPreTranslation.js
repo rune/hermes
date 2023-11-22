@@ -1,6 +1,6 @@
-import { Translations } from "@crowdin/crowdin-api-client"
+const { Translations } = require("@crowdin/crowdin-api-client")
 
-export function applyPreTranslation(token, projectId, languageIds, fileIds, engineId) {
+function applyPreTranslation(token, projectId, languageIds, fileIds, engineId) {
   return new Translations({ token })
     .applyPreTranslation(projectId, {
       method: "mt",
@@ -11,3 +11,5 @@ export function applyPreTranslation(token, projectId, languageIds, fileIds, engi
     })
     .then(resp => resp.data.identifier)
 }
+
+module.exports = { applyPreTranslation }

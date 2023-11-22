@@ -1,7 +1,9 @@
-import { Translations } from "@crowdin/crowdin-api-client"
+const { Translations } = require("@crowdin/crowdin-api-client")
 
-export function getPreTranslationStatus(token, projectId, identifier) {
+function getPreTranslationStatus(token, projectId, identifier) {
   return new Translations({ token })
     .preTranslationStatus(projectId, identifier)
     .then(resp => resp.data)
 }
+
+module.exports = { getPreTranslationStatus }
